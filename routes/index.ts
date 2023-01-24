@@ -1,6 +1,6 @@
 // Import packages
 import { Router } from 'express';
-import { getLogin, getRegister, register,  } from '../controllers/auth';
+import { getLogin, getRegister, login, register,  } from '../controllers/auth';
 
 const routes = Router();
 
@@ -13,7 +13,7 @@ routes.get('/login', getLogin);
 routes.get('/register', getRegister);
 
 routes.post('/register', register);
-// routes.post('/login', userRouteValidation('/login'), preLogin);
+routes.post('/login', login);
 
 
 

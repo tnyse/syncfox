@@ -35,11 +35,11 @@ export const register = async (req: Request, res: Response) => {
 
         const accountUser =	await Accounts.findAll({where: { email}});
 
-        if (accountUser.length==0) return res.render('pages/sign-up', { message: "user already exsit" })
+        if (accountUser.length!=0) return res.render('pages/sign-up', { message: "user already exsit" })
 
         bcrypt.hash(password, saltRounds, async function (err, hashedPassword) {
             let insertData: any = { 
-                email, hashedPassword, 
+                email, password:hashedPassword, 
                 username,
                 join:currentDate
             };
@@ -51,6 +51,42 @@ export const register = async (req: Request, res: Response) => {
        
     }
 };
+
+
+
+
+export const login = async (req: Request, res: Response) => {
+    let { email, password } = req.body;
+    if (email === "" || password === "" || !email || !password) {
+        res.render('pages/sign-in', { message: "field cannot be empty" })
+        //   res.status(400).send({ message: "field cannot be empty" });
+    }
+    if (!validateEmail(RemoveExtraSpace(email))) {
+        res.render('pages/sign-in', { message: "enter a valid email" })
+        //   res.status(400).send({ message: "enter a valid email" });
+    }
+   const user =await Accounts.findAll({ where: { email: email} })
+
+   if (user.length == 0) {
+    res.render('pages/sign-in', { message: "user does not exist" })
+    //   res.status(400).send({ message: "invalid credentials" });
+}
+
+else {
+    bcrypt.compare(password, user[0].password).then(function (result) {
+        if (!result) {
+            res.render('pages/sign-in', { message: "invalid credentials" })
+            //   res.status(400).send({ message: "invalid credentials" });
+        }
+        else {
+            res.render('pages/sign-in', { message: "loged in" })
+        }
+    });
+}
+       
+};
+
+
 
 
 

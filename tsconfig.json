@@ -1,0 +1,29 @@
+
+
+
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "target": "es6",
+    "rootDir": "./",
+    "outDir": "./build",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "typeRoots": [
+      "./@types",
+      "./node_modules/@types"
+    ],
+    "resolveJsonModule": true,
+    "lib": ["dom", "es6"],
+  },
+  "include": [
+    "**/*"
+  ],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+  }
+}

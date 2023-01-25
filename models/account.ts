@@ -22,7 +22,7 @@ export class Accounts extends Model {
 
 	@AllowNull(false)
 	@Column(DataType.STRING)
-	surname!: string;
+	username!: string;
 
 	@AllowNull(false)
 	@Column(DataType.STRING)

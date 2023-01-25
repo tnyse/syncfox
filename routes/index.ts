@@ -1,6 +1,6 @@
 // Import packages
 import { Router } from 'express';
-import { getLogin, getRegister, register,  } from '../controllers/auth';
+import { getLogin, getRegister, index, login, register,  } from '../controllers/auth';
 
 const routes = Router();
 
@@ -11,9 +11,10 @@ API CALL START
 // INDEX ROUTE TO SHOW API IS WORKING FINE
 routes.get('/login', getLogin);
 routes.get('/register', getRegister);
+routes.get('/index', index);
 
 routes.post('/register', register);
-// routes.post('/login', userRouteValidation('/login'), preLogin);
+routes.post('/login', login);
 
 
 

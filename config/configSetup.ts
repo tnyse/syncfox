@@ -16,6 +16,8 @@ type Config = {
 	MAIL_FROM: string;
 	MAIL_FROM_NAME: string;
 	BASE_API_URL: string;
+	TOKEN_SECRET: string;
+    saltRounds: number;
 };
 
 const getConfig = (): Config => {
@@ -25,6 +27,8 @@ const getConfig = (): Config => {
 		SSL: true,
 		JWTSECRET: process.env.JWTSECRET!,
 		JWT_EXPIRY_TIME: process.env.JWT_EXPIRY_TIME!,
+		TOKEN_SECRET: process.env.TOKEN_SECRET!,
+		saltRounds: Number(process.env.saltRounds!),
 		DBNAME: process.env.DBNAME!,
 		DBUSERNAME: process.env.DBUSERNAME!,
 		DBPASSWORD: process.env.DBPASSWORD!,

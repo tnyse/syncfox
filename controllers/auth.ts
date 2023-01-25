@@ -2,7 +2,8 @@ import { RemoveExtraSpace, validateEmail } from "../helpers/utility";
 import { Request, Response } from 'express';
 import { Accounts } from "../models/account";
 import bcrypt from "bcrypt";
-const saltRounds = 10;
+var jwt = require("jsonwebtoken");
+import config from '../config/configSetup';
 
 
 export const register = async (req: Request, res: Response) => {
@@ -37,7 +38,7 @@ export const register = async (req: Request, res: Response) => {
 
         if (accountUser.length!=0) return res.render('pages/sign-up', { message: "user already exsit" })
 
-        bcrypt.hash(password, saltRounds, async function (err, hashedPassword) {
+        bcrypt.hash(password, config.saltRounds, async function (err, hashedPassword) {
             let insertData: any = { 
                 email, password:hashedPassword, 
                 username,
@@ -45,7 +46,7 @@ export const register = async (req: Request, res: Response) => {
             };
     
             const account =	await Accounts.create(insertData);
-            res.render('pages/index', { message: "account created successfuly" })
+            res.render('pages/sign-in', { message: "account created successfuly" })
 		})
         console.log("account created successfuly" );
        
@@ -54,45 +55,56 @@ export const register = async (req: Request, res: Response) => {
 
 
 
-
 export const login = async (req: Request, res: Response) => {
-    let { email, password } = req.body;
-    if (email === "" || password === "" || !email || !password) {
+    
+    const { email, password } = req.body;
+
+    if (email === "" || password === "" || !email || !password ) {
         res.render('pages/sign-in', { message: "field cannot be empty" })
-        //   res.status(400).send({ message: "field cannot be empty" });
     }
-    if (!validateEmail(RemoveExtraSpace(email))) {
+  
+  else  if (!validateEmail(RemoveExtraSpace(email))) {
         res.render('pages/sign-in', { message: "enter a valid email" })
-        //   res.status(400).send({ message: "enter a valid email" });
-    }
-   const user =await Accounts.findAll({ where: { email: email} })
+    }else{
 
-   if (user.length == 0) {
-    res.render('pages/sign-in', { message: "user does not exist" })
-    //   res.status(400).send({ message: "invalid credentials" });
-}
+        const accountUser =	await Accounts.findAll({where: { email}});
 
-else {
-    bcrypt.compare(password, user[0].password).then(function (result) {
-        if (!result) {
-            res.render('pages/sign-in', { message: "invalid credentials" })
-            //   res.status(400).send({ message: "invalid credentials" });
-        }
+        if (accountUser.length==0) return res.render('pages/sign-in', { message: "user does not exist" })
+
+     
         else {
-            res.render('pages/sign-in', { message: "loged in" })
+            bcrypt.compare(password, accountUser[0].password).then(function (result) {
+                if (!result) {
+                    res.render('pages/sign-in', { message: "invalid credentials" })
+                    //   res.status(400).send({ message: "invalid credentials" });
+                }
+                else {
+                    let token = jwt.sign({ id: accountUser[0].id }, config.TOKEN_SECRET, {
+                        expiresIn: "3600000000s",
+                    });
+                     
+                    res.render('pages/index', { message: "" })
+                    //   res.status(400).send({ message: "invalid credentials" });
+                }
+            });
         }
-    });
-}
        
+    }
 };
-
-
 
 
 
 export const getLogin = async (req: Request, res: Response) => {
     res.render('pages/sign-in', {message: "null"});
 };
+
+
+export const index = async (req: Request, res: Response) => {
+    res.render('pages/index', {message: "null"});
+};
+
+
+
 
 
 export const getRegister = async (req: Request, res: Response) => {

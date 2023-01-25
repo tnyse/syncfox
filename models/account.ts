@@ -1,4 +1,6 @@
-import { Table, Model, Column, DataType, AllowNull, Default } from 'sequelize-typescript';
+// import { Table, Model, Column, DataType, AllowNull, Default } from 'sequelize-typescript';
+
+import { AllowNull, Column, DataType, Default, Model, Table } from "sequelize-typescript";
 
 
 

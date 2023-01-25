@@ -35,7 +35,7 @@ export const register = async (req: Request, res: Response) => {
 
         const accountUser =	await Accounts.findAll({where: { email}});
 
-        if (accountUser.length==0) return res.render('pages/sign-up', { message: "user already exsit" })
+        if (accountUser.length!=0) return res.render('pages/sign-up', { message: "user already exsit" })
 
         bcrypt.hash(password, saltRounds, async function (err, hashedPassword) {
             let insertData: any = { 
@@ -45,7 +45,7 @@ export const register = async (req: Request, res: Response) => {
             };
     
             const account =	await Accounts.create(insertData);
-            res.render('pages/sign-in', { message: "account created successfuly" })
+            res.render('pages/index', { message: "account created successfuly" })
 		})
         console.log("account created successfuly" );
        

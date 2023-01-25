@@ -45,7 +45,7 @@ export const register = async (req: Request, res: Response) => {
             };
     
             const account =	await Accounts.create(insertData);
-            res.render('pages/sign-in', { message: "account created successfuly" })
+            res.render('pages/index', { message: "account created successfuly" })
 		})
         console.log("account created successfuly" );
        

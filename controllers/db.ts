@@ -4,6 +4,9 @@ import { Sequelize } from 'sequelize-typescript';
 // Import configs
 import config from '../config/configSetup';
 import { Accounts } from '../models/account';
+import { Musics } from '../models/music';
+import { Profiles } from '../models/profile';
+import { Verify } from '../models/verify';
 
 
 
@@ -17,6 +20,9 @@ const sequelize = new Sequelize(config.DBNAME, config.DBUSERNAME, config.DBPASSW
 	},
 	models: [
 		Accounts,
+		Verify,
+		Profiles,
+		Musics
 	],
 });
 

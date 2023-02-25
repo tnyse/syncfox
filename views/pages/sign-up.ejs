@@ -7,16 +7,19 @@
 <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
 
 <title>:: Alpino :: Sign Up</title>
+
 <!-- Favicon-->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css">
 
 <!-- Custom Css -->
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/main.css">    
 <link rel="stylesheet" href="/css/color_skins.css">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/jquery.toast.min.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 </head>
 
 <body class="theme-black">
@@ -57,23 +60,52 @@
                         </div>
                         <form action="/register" method="post" class="form">                            
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Enter User Name" id="username" name="username">
+                                <input type="text" class="form-control" placeholder="Enter User Name" id="username" name="username" required>
                                 <span class="input-group-addon"><i class="zmdi zmdi-account-circle"></i></span>
                             </div>
                             <div class="input-group">
-                                <input type="email" class="form-control" placeholder="Enter Email" id="email" name="email">
+                                <input type="email" class="form-control" placeholder="Enter Email" id="email" name="email" required>
                                 <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
                             </div>
                             <div class="input-group">
-                                <input type="password" placeholder="Password" class="form-control" id="password" name="password" />
+                                <input type="password" placeholder="Password" class="form-control" id="password" name="password" required/>
                                 <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
                             </div>
+                           <div class="input-group m-2">
+                            <label for="type" class="m-2"> Register as: </label>
+                            <select name="type" id="type"  required>
+                              <option value="user" selected="selected" >User</option>
+                              <option value="artist">Artist</option>
+                            </select>
+                           </div>
+                          
                             <div class="checkbox">
-                                <input id="terms" type="checkbox">
+                                <input id="terms" type="checkbox" required>
                                 <label for="terms">I read and Agree to the <a href="javascript:void(0);">Terms of Usage</a></label>
                             </div> 
                             <div class="footer">
+
                                 <button type="submit" class="btn btn-primary btn-round btn-block">SIGN UP</button>
+                               <div class="d-flex flex-row justify-content-center">
+                               <div>
+                                <div id="g_id_onload"
+                                data-client_id="161003433702-uhc9pgqfko5fdp9khuftlf4sicpri6r2.apps.googleusercontent.com"
+                                data-context="signup"
+                                data-ux_mode="popup"
+                                data-callback="handleCredentialResponse"
+                                data-itp_support="true">
+                           </div>
+                           
+                           <div class="g_id_signin"
+                                data-type="standard"
+                                data-shape="pill"
+                                data-theme="filled_black"
+                                data-text="signin_with"
+                                data-size="large"
+                                data-logo_alignment="left">
+                           </div>
+                               </div>
+                               </div>
                             </div>                           
                         </form>
                        
@@ -86,10 +118,11 @@
 </div>
 
 <!-- Jquery Core Js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="/js/jquery-3.3.1.min.js"></script>
-  <script src="/js/jquery.toast.min.js"></script>
 <script src="/bundles/libscripts.bundle.js"></script>
-<script src="/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js --> 
+<script src="/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
+  <script src="/js/jquery.toast.min.js"></script>
 
 <% let messages = message; %>
 <script>
@@ -119,15 +152,67 @@
 
    
     if(getMessage === "null"){
-
+       
     }else if(getMessage === "pop"){
+       
       showToast("Login/Signup an account")
     }
     
     else{
+      
       showToast2(getMessage)
     }
+
+    console.log(`${getMessage}`);
+   
+
+ 
     
+    
+
+    globalThis.handleCredentialResponse = (response) => {
+        var element = document.getElementById("type");
+      var type = element.options[element.selectedIndex].value;
+  // decodeJwtResponse() is a custom function defined by you
+
+  // to decode the credential response.
+
+let id_token = response.credential;
+
+
+  axios({
+  method: 'post',
+  url: '/google_login',
+  data: {
+    token: id_token,
+    type: type
+  }
+}).then((response) => {
+  console.log(response.data);
+  if(response.data.message){
+    if(response.data.islogin){
+        
+        location.assign("/index")
+    }else{
+        if(response.data.usertype=="USER"){
+            location.assign("/user-setup")
+        }else{
+            location.assign("/artist-setup")
+        }
+        
+    }
+    
+  }else{
+    location.assign("/login")
+  }
+}, (error) => {
+  console.log(error);
+});
+
+
+}
+
+
 </script>
 </body>
 </html>

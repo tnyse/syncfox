@@ -1,5 +1,9 @@
 // import { NextFunction, Request, Response } from 'express';
 // import config from '../config/configSetup';
+const cloudinary = require('cloudinary').v2
+import multer from "multer";
+import * as fs from 'fs';
+import * as path from 'path';
 
 
 export const handleResponse = (res: any, statusCode: number, status: boolean, message: string, data?: any) => {
@@ -53,3 +57,56 @@ export const RemoveExtraSpace = (value: string) => {
 }
 
 
+
+
+
+// cloudinary configuration
+ cloudinary.config({
+    cloud_name: 'dqth56myg',
+    api_key: '774921177923962',
+    api_secret: 'dDUKTJBycDHC4gjOKZ9UAHw8SAM'
+  });
+  
+  
+  
+  
+  
+  
+  
+  
+ export const imageStorage = multer.diskStorage({
+    destination: (req:any, file:any, cb:any) => {
+      cb(null, './image')
+    },
+    filename: (req:any, file:any, cb:any) => {
+      let filename = Date.now() + "--" + file.originalname;
+      cb(null, filename.replace(/\s+/g, ''))
+    }
+  });
+
+
+  export const uploads = multer({
+    storage: imageStorage,
+  })
+
+
+  export const upload_cloud = async (path:any)=>{
+	const result = await cloudinary.uploader.upload(path,  { resource_type: 'auto' })
+	return result;
+  }
+
+
+
+  export const arrayBufferToBase64 = (buffer:any) =>{
+    const bytes = new Uint8Array(buffer);
+    const base64 = Buffer.from(bytes).toString('base64');
+    return base64;
+  }
+
+
+  export const base64ToFile = async (base64String:any, filePath:any) => {
+    const data = Buffer.from(base64String, 'base64');
+   fs.appendFileSync(filePath, data);
+    const result = await upload_cloud(filePath);
+    return result;
+  }

@@ -10,15 +10,23 @@ import config from './config/configSetup';
 // import businessRoutes from './routes/business';
 import { initDB } from './controllers/db';
 import routes from './routes';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 // import routes from './routes';
 
 const app: Application = express();
 
 app.use(morgan('dev'));
+app.use(cookieParser())
 
 // PARSE JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+
+// PARSE JSON
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 
 // ENABLE CORS AND START SERVER
 app.use(cors({ origin: true }));

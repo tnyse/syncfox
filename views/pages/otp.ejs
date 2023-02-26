@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>:: Alpino :: Verify Email</title>
+    <!-- Favicon-->
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/jquery.toast.min.css">
+    <link rel="stylesheet" href="/css/otp.css">
+</head>
+<body>
+    <div class="container height-100 d-flex justify-content-center align-items-center">
+        <div class="position-relative">
+           <div class="card p-2 text-center">
+              <h6>Please enter the one time password <br> to verify your account</h6>
+              <div> <span>A code has been sent to</span> <small><%= email.toString() %></small> </div>
+              <form action="/confirm" method="post">
+                <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                    <input class="m-2 text-center form-control rounded" type="text" id="first" maxlength="1" name="first"/> 
+                    <input class="m-2 text-center form-control rounded" type="text" id="second" maxlength="1" name="second"/>
+                    <input class="m-2 text-center form-control rounded" type="text" id="third" maxlength="1" name="third"/> 
+                    <input class="m-2 text-center form-control rounded" type="text" id="fourth" maxlength="1" name="fourth" /> 
+                    <input class="m-2 text-center form-control rounded" type="text" id="fifth" maxlength="1" name="fifth" />
+                    <input class="m-2 text-center form-control rounded" type="text" id="sixth" maxlength="1" name="sixth" />
+                </div>
+                <div class="mt-4"> <button type="submit"  class="btn btn-danger px-4 validate">Validate</button> </div>
+             </form>
+             
+           </div>
+           <div class="card-2">
+            <form action="/resend" method="post">
+                <div type="submit" class="content d-flex justify-content-center align-items-center"> <span>Didn't get the code. </span> <button type="submit" class="text-decoration-none ml-3 remove-style"> Resend code</button> </div>
+            </form>
+             
+           </div>
+        </div>
+     </div>
+     <!-- Jquery Core Js -->
+<script src="/js/otp.js"></script>
+<!-- Jquery Core Js -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/bundles/libscripts.bundle.js"></script>
+<script src="/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
+  <script src="/js/jquery.toast.min.js"></script>
+
+
+<% let messages = message; %>
+<script>
+   let getMessage = "<%= messages  %>"; 
+  function showToast(text){
+    console.log("donee");
+    // navigator.clipboard.writeText(getMessage);
+    $.toast({
+      text: text,
+    showHideTransition: 'slide',
+    icon: 'error',
+    heading: 'Failed'}
+    )
+    }
+
+
+    function showToast2(text){
+    console.log("donee");
+    // navigator.clipboard.writeText(getMessage);
+    $.toast({
+      text: text,
+    showHideTransition: 'slide',
+    icon: 'success',
+    heading: 'Success',}
+    )
+    }
+
+   
+    if(getMessage === "null"){
+
+    }else if(getMessage === "pop"){
+      showToast("Login/Signup an account")
+    }
+    
+    else{
+      showToast2(getMessage)
+    }
+
+
+    console.log(getMessage)
+    
+</script>
+</body>
+</html>

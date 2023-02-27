@@ -104,16 +104,45 @@ const  path = require('path')
   }
 
 
+  const delAll = ()=> {
+fs.readdir("./image", (err, files) => {
+  if (err) throw err;
+
+  for (const file of files) {
+    fs.unlink(`./image/${file}`, err => {
+      if (err) throw err;
+    });
+  }
+});
+  }
+
    const base64ToFile = async (base64String, filePath) => {
     const data = Buffer.from(base64String, 'base64');
    fs.appendFileSync(filePath, data);
     const result = await upload_cloud(filePath);
+    // fs.unlink(filePath);
+    delAll()
     return result;
   }
 
+
+
+
+  function makeid(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
+    }
+    return result;
+  }
+
+
   module.exports = {
      base64ToFile,  arrayBufferToBase64, 
-    upload_cloud,uploads,  imageStorage,
+    upload_cloud,uploads,  imageStorage,makeid,
      RemoveExtraSpace, validateEmail,createRandomRef,
      errorResponse, handleResponse, successResponse,
      

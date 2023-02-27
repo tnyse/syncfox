@@ -14,6 +14,7 @@ API CALL START
 
 // INDEX ROUTE TO SHOW API IS WORKING FINE
 routes.get('/login', getLogin);
+routes.get('/', getLogin);
 routes.get('/register', getRegister);
 routes.get('/index', index);
 routes.get('/verify/:email', verify);

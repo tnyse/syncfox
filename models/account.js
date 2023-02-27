@@ -22,10 +22,10 @@ const sequelize = new Sequelize(config.DBNAME, config.DBUSERNAME, config.DBPASSW
 	host: config.DBHOST,
 	port: config.DBPORT,
 	dialect: 'mysql',
-	// logging: false,
-	// dialectOptions: {
-	// 	ssl: { require: true, rejectUnauthorized: false },
-	// },
+	logging: false,
+	dialectOptions: {
+		ssl: { require: true, rejectUnauthorized: false },
+	},
 	// models: [
 	// 	Accounts,
 	// 	Verify,
@@ -34,7 +34,7 @@ const sequelize = new Sequelize(config.DBNAME, config.DBUSERNAME, config.DBPASSW
 	// ],
 });
 
-// define the Accounts model
+
  const Accounts = sequelize.define('accounts', {
 	id: {
 	  type: DataTypes.INTEGER,
@@ -52,25 +52,24 @@ const sequelize = new Sequelize(config.DBNAME, config.DBUSERNAME, config.DBPASSW
 	username: {
 	  type: DataTypes.STRING,
 	  allowNull: false,
-	  unique: true,
 	},
 	join: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	  },
 	  status: {
+		defaultValue: AccountStatus.ACTIVE,
 		type: DataTypes.ENUM(AccountStatus.ACTIVE, AccountStatus.SUSPENDED),
 		allowNull: false,
 	  },
 	  type: {
 		type: DataTypes.ENUM(AccountType.USER, AccountType.ARTIST),
 		allowNull: false,
-		unique: true,
 	  },
 	  verified: {
+		defaultValue: false,
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
-		unique: true,
 	  }
   }, {
 	// optional settings for the model

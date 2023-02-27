@@ -1,13 +1,14 @@
 const { createRandomRef, RemoveExtraSpace, validateEmail } = require("../helpers/utility")
 const { Request, Response } = require('express')
-const { Accounts, AccountType } = require("../models/account")
+const { Accounts, AccountType, Profiles } = require("../models/account")
 const bcrypt = require("bcrypt")
 var jwt = require("jsonwebtoken");
-const config = require('../config/configSetup')
+
+const {config} = require('../config/configSetup');
+
 const { emailVerifyTemplateData, userOnboardingTemplateData } = require("../service/mailer/templateData")
 const { prepareMail } = require("../service/mailer/mailer")
 const { Verify } = require("../models/verify")
-const { Profiles } = require("../models/profile")
 const {OAuth2Client} = require('google-auth-library')
 const client = new  OAuth2Client(config.CLIENT_ID);
 
@@ -31,6 +32,7 @@ let currentDate = `${day}-${month}-${year}`;
     
 
     const { email, password, username, type } = req.body;
+   
 
     if (email === "" || password === ""|| username == "" || !email || !password || !username) {
         res.render('pages/sign-up', { message: "field cannot be empty" })
@@ -61,6 +63,19 @@ let currentDate = `${day}-${month}-${year}`;
                 type:type=="artist"?AccountType.ARTIST:AccountType.USER,
                 join:currentDate
             };
+
+            console.log({ 
+                email, password:hashedPassword, 
+                username,
+                type:type=="artist"?AccountType.ARTIST:AccountType.USER,
+                join:currentDate
+            })
+            console.log({ 
+                email, password:hashedPassword, 
+                username,
+                type:type=="artist"?AccountType.ARTIST:AccountType.USER,
+                join:currentDate
+            })
     
             const account =	await Accounts.create(insertData);
 
@@ -323,6 +338,12 @@ let currentDate = `${day}-${month}-${year}`;
         password = payload.sub;
         username = payload.name;
         console.log(payload)
+        console.log({
+            email, password, 
+            username,
+            type:type=="artist"?AccountType.ARTIST:AccountType.USER,
+            join:currentDate
+        })
 
         if (email === "" || password === "" || !email || !password ) {
             res.send({message: false, data:"field cannot be empty"})

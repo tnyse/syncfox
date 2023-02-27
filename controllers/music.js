@@ -1,10 +1,10 @@
 
 
-const { arrayBufferToBase64, base64ToFile, upload_cloud } = require('../helpers/utility');
+const { arrayBufferToBase64, base64ToFile, upload_cloud,makeid } = require('../helpers/utility');
 const NodeID3 = require('node-id3')
 const ffprobe = require('ffprobe');
 const ffprobeStatic = require('ffprobe-static');
-const { Musics } = require('../models/music');
+const { Musics } = require('../models/account');
 const  fs = require('fs');
 const path = require('path');
 
@@ -52,40 +52,41 @@ const path = require('path');
                             try {
 
                                 const result = await upload_cloud(req.file.path.replace(/ /g, "_"));
+                                // fs.unlink(req.file.path.replace(/ /g, "_"));
 
                                 const arrayBuffer = new Uint8Array(tags.image.imageBuffer).buffer;
                                 const base64String = arrayBufferToBase64(arrayBuffer);
-                                const resultbase = await base64ToFile(base64String, './image/main.jpg');
+                                const resultbase = await base64ToFile(base64String, `./image/${makeid(5)}.jpg`);
 
                                 // console.log(tags)
                                 console.log({
-                                    genre: tags.genre,
-                                    trackNumber: tags.trackNumber,
-                                    year: tags.year,
-                                    title: tags.title,
-                                    performerInfo: tags.performerInfo,
-                                    album: tags.album,
-                                    secure_url: result.secure_url,
-                                    length: `${minutes}:${seconds}`,
-                                    imageBuffer: resultbase.secure_url,
-                                    comment: tags.comment.text.toString(), 
-                                    composer: tags.composer.toString(),
+                                    genre: tags.genre?tags.genre:"",
+                                    trackNumber: tags.trackNumber?tags.trackNumber:"",
+                                    year: tags.year?tags.year:"",
+                                    title: tags.title?tags.title:"",
+                                    performerInfo: tags.performerInfo?tags.performerInfo:"",
+                                    album: tags.album?tags.album:"",
+                                    secure_url: result.secure_url?result.secure_url:"",
+                                    length: `${minutes}:${seconds}`??"",
+                                    imageBuffer: resultbase.secure_url?resultbase.secure_url:"",
+                                    comment: tags.comment?tags.comment.text.toString():"", 
+                                    composer: tags.composer?tags.composer.toString():"",
                                 })
 
                                 res.send({
                                     upload: true,
                                     date: {
-                                        genre: tags.genre,
-                                        trackNumber: tags.trackNumber,
-                                        year: tags.year,
-                                        title: tags.title,
-                                        performerInfo: tags.performerInfo,
-                                        album: tags.album,
-                                        secure_url: result.secure_url,
-                                        length: `${minutes}:${seconds}`,
-                                        imageBuffer: resultbase.secure_url,
-                                        comment: tags.comment.text.toString(), 
-                                        composer: tags.composer.toString(),
+                                        genre: tags.genre?tags.genre:"",
+                                        trackNumber: tags.trackNumber?tags.trackNumber:"",
+                                        year: tags.year?tags.year:"",
+                                        title: tags.title?tags.title:"",
+                                        performerInfo: tags.performerInfo?tags.performerInfo:"",
+                                        album: tags.album?tags.album:"",
+                                        secure_url: result.secure_url?result.secure_url:"",
+                                        length: `${minutes}:${seconds}`??"",
+                                        imageBuffer: resultbase.secure_url?resultbase.secure_url:"",
+                                        comment: tags.comment?tags.comment.text.toString():"", 
+                                        composer: tags.composer?tags.composer.toString():"",
                                     }
                                 });
                             } catch (error) {

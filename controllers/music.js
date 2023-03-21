@@ -6,6 +6,8 @@ const ffprobe = require('ffprobe');
 const ffprobeStatic = require('ffprobe-static');
 const { Musics } = require('../models/account');
 const  fs = require('fs');
+const { Sequelize } = require('sequelize');
+const Op = Sequelize.Op;
 const path = require('path');
 
 
@@ -17,18 +19,113 @@ const path = require('path');
     res.render('pages/form-upload');
 };
 
+
+const test = async (req, res) => {
+    res.render('pages/test');
+};
+
+
+
  const musicform = async (req, res) => {
     res.render('pages/music-form');
 };
+
+
+const audiotest = async(req, res) => {
+    const  account = req.cookies.id;
+    const music = await Musics.findAll({where:{
+        account: account
+    }})
+    res.render("pages/audiotest", {music})
+}
+
+
+const search = async(req, res) => {
+    let {searchQuery} = req.query;
+    const musics = await Musics.findAll({
+        limit: 50,
+        where: {
+            [Op.or]: [
+            {title: { [Op.like]: '%' + searchQuery + '%' }},
+            {comment: { [Op.like]: '%' + searchQuery + '%' }},
+            {album: { [Op.like]: '%' + searchQuery + '%' }},
+            {genre: { [Op.like]: '%' + searchQuery + '%' }},
+            {composer: { [Op.like]: '%' + searchQuery + '%' }},
+           
+            ]
+          }
+    })
+    // console.log(musics)
+
+const searchListFirst = [];
+const searchList = [];
+
+for (let value of musics) {
+    searchListFirst.push(value.dataValues)
+}
+
+
+
+for(let key of searchListFirst){
+    const keys = Object.keys(key);
+    // console.log(keys)
+    for(let realkey of keys){
+        if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+            searchList.push(key[realkey]);
+          }
+    }
+}
+
+const filteredArr = searchList.filter(str => str !== "");
+const search = [...new Set(filteredArr)];
+console.log(search)
+
+    res.render("pages/search-results", {musics, search})
+}
+
+
+
+
 
  const filemedia = async (req, res) => {
   const  account = req.cookies.id;
     const musics = await Musics.findAll({where:{
         account: account
     }})
-    res.render('pages/file-media', {musics});
 
-};
+
+
+
+    const searchListFirst = [];
+    const searchList = [];
+    
+    for (let value of musics) {
+        searchListFirst.push(value.dataValues)
+    }
+    
+    
+    
+    for(let key of searchListFirst){
+        const keys = Object.keys(key);
+        // console.log(keys)
+        for(let realkey of keys){
+            if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+                searchList.push(key[realkey]);
+              }
+        }
+    }
+    
+    const filteredArr = searchList.filter(str => str !== "");
+    const search = [...new Set(filteredArr)];
+    
+        res.render('pages/file-media', {musics, search})
+    };
+
+
+
+const musicplayer = async (req, res) => {
+      res.render('pages/musicplayer');
+  };
 
 
 
@@ -144,5 +241,9 @@ module.exports ={
     uploadmusicform,
     getupload,
     musicform,
-    
+    musicplayer,
+    test,
+    audiotest,
+    search,
+   
 }

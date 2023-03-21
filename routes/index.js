@@ -1,7 +1,7 @@
 // Import packages
 
 const { addUsersetUp, artistSetup, confirmOtp, getLogin, getRegister, index, login, login_google, register, resendCode, userSetup, verify,  } = require('../controllers/auth');
-const { filemedia, getupload, musicform, upload, uploadmusicform } = require('../controllers/music');
+const { filemedia, getupload, musicform, upload, uploadmusicform,search, musicplayer,audiotest, test } = require('../controllers/music');
 const { uploads } = require('../helpers/utility');
 const { checkuser } = require('../middleware/checkuser');
 
@@ -23,6 +23,12 @@ routes.get("/artist-setup", artistSetup)
 routes.get("/upload",checkuser, getupload)
 routes.get("/musicform", musicform)
 routes.get("/filemedia", filemedia)
+routes.get("/musicplayer", musicplayer)
+routes.get("/search", search)
+routes.get("/audiotest", audiotest)
+
+
+
 
 
 

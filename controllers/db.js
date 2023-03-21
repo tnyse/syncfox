@@ -13,7 +13,7 @@ const { Verify } = require('../models/verify');
 	dialect: 'mysql',
 	logging: false,
 	dialectOptions: {
-		// ssl: { require: true, rejectUnauthorized: false },
+		ssl: { require: true, rejectUnauthorized: false },
 	},
 	models: [
 		Accounts,

@@ -15,12 +15,12 @@ const { Verify } = require('../models/verify');
 	dialectOptions: {
 		ssl: { require: true, rejectUnauthorized: false },
 	},
-	models: [
-		Accounts,
-		Verify,
-		Profiles,
-		Musics
-	],
+	// models: [
+	// 	Accounts,
+	// 	Verify,
+	// 	Profiles,
+	// 	Musics
+	// ],
 });
 
 const initDB = async () => {

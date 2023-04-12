@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/slider.css">
+
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="sidebar">
+      <div class="logo">
+        <a href="#">
+          <img src="/images/logo.svg" alt="Logo" />
+        </a>
+      </div>
+
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="fa fa-home"></span>
+              <span>Home</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <span class="fa fa-search"></span>
+              <span>Search</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <span class="fa fas fa-book"></span>
+              <span>Your Library</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="fa fas fa-plus-square"></span>
+              <span>Create Playlist</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <span class="fa fas fa-heart"></span>
+              <span>Liked Songs</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="policies">
+        <ul>
+          <li>
+            <a href="#">Cookies</a>
+          </li>
+          <li>
+            <a href="#">Privacy</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="topbar">
+        <div class="prev-next-buttons">
+          <button type="button" class="fa fas fa-chevron-left"></button>
+          <button type="button" class="fa fas fa-chevron-right"></button>
+        </div>
+
+        <div class="navbar">
+          <ul>
+            <li>
+              <a href="#">Premium</a>
+            </li>
+            <li>
+              <a href="#">Support</a>
+            </li>
+            <li>
+              <a href="#">Download</a>
+            </li>
+            <li class="divider">|</li>
+            <li>
+              <a href="#">Sign Up</a>
+            </li>
+          </ul>
+          <button type="button">Log In</button>
+        </div>
+      </div>
+
+
+
+      <div class="slider">
+        <div class="slide">
+              <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80" alt="Photo1"/>
+          </div>
+        <div class="slide">
+              <img src="https://images.unsplash.com/photo-1619266465172-02a857c3556d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80" alt="Photo3"/>
+          </div> 
+        <div class="slide">
+              <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80" alt="Photo2"/>
+          </div>
+        <div class="slide">
+              <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80" alt="Photo3"/>
+          </div> 
+  
+          <button class="btn-slide prev"><i class="fas fa-3x fa-chevron-circle-left"></i></button>
+          <button class="btn-slide next"><i class="fas fa-3x fa-chevron-circle-right"></i></button>
+        
+      </div>
+      <div class="dots-container">
+              <span class="dot active" data-slide="0"></span>
+              <span class="dot" data-slide="1"></span>
+              <span class="dot" data-slide="2"></span>
+        <span class="dot" data-slide="3"></span>
+      </div>
+
+
+
+      
+        <div class="spotify-playlists">
+          <h2>hhh</h2>
+        </div>
+        <div  style="overflow-x:auto; ">
+            <%- include('../partials/audiotest', {music: musics}); %>
+        </div>
+      
+
+    
+
+  
+
+    </div>
+
+
+    <script src="/js/home.js"></script>
+    <script
+      src="https://kit.fontawesome.com/23cecef777.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

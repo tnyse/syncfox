@@ -218,11 +218,121 @@ const Musics = sequelize.define('musics', {
   });
 
 
+
+  const Category = sequelize.define('category', {
+
+	id: {
+	  type: DataTypes.INTEGER,
+	  primaryKey: true,
+	  autoIncrement: true,
+	},
+	title: {
+	  type: DataTypes.STRING,
+	  allowNull: false,
+	},
+	description: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	  },
+	image: {
+	  type: DataTypes.STRING,
+	  allowNull: false,
+	},
+  }, {
+	// optional settings for the model
+	timestamps: true, // adds createdAt and updatedAt fields
+	freezeTableName: true, // use singular table name (default is pluralized)
+  });
+
+
+
+  const SubCategory = sequelize.define('subcategory', {
+	id: {
+	  type: DataTypes.INTEGER,
+	  primaryKey: true,
+	  autoIncrement: true,
+	},
+	title: {
+	  type: DataTypes.STRING,
+	  allowNull: false,
+	},
+	description: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	  },
+	image: {
+	  type: DataTypes.STRING,
+	  allowNull: false,
+	},
+	// category: {
+	// 	type: DataTypes.INTEGER,
+	// 	allowNull: true,
+	// 	references: {
+	// 		model: 'category', // name of the referenced model
+	// 		key: 'id', // name of the referenced column
+	// 	},
+	// },
+  }, {
+	// optional settings for the model
+	timestamps: true, // adds createdAt and updatedAt fields
+	freezeTableName: true, // use singular table name (default is pluralized)
+  });
+
+
+  const MusicAdmin = sequelize.define('musicadmin', {
+	id: {
+	  type: DataTypes.INTEGER,
+	  primaryKey: true,
+	  autoIncrement: true,
+	},
+	
+	// subcategory: {
+	// 	type: DataTypes.INTEGER,
+	// 	allowNull: true,
+	// 	references: {
+	// 		model: 'subcategory', // name of the referenced model
+	// 		key: 'id', // name of the referenced column
+	// 	},
+	// },
+
+	// musics: {
+	// 	type: DataTypes.INTEGER,
+	// 	allowNull: true,
+	// 	references: {
+	// 		model: 'musics', // name of the referenced model
+	// 		key: 'id', // name of the referenced column
+	// 	},
+	// },
+  }, {
+	// optional settings for the model
+	timestamps: true, // adds createdAt and updatedAt fields
+	freezeTableName: true, // use singular table name (default is pluralized)
+  });
+
   Profiles.belongsTo(Accounts, {  as: 'account_id' });
   Musics.belongsTo(Accounts, {  as: 'account_id' })
+
+
+Category.hasMany(SubCategory, { as: "subcategorys" });
+SubCategory.belongsTo(Category, {
+  foreignKey: "categoryId",
+  as: "category",
+});
+
+
+SubCategory.hasMany(MusicAdmin, { as: "musics" });
+MusicAdmin.belongsTo(SubCategory, {
+  foreignKey: "subcategoryId",
+  as: "subcategory",
+});
+MusicAdmin.belongsTo(Musics, {
+	foreignKey: "musicId",
+	as: "music",
+  });
+
 
 
   sequelize.sync()
 
 
-  module.exports = {Profiles, Musics, Accounts, AccountType, AccountStatus}
+  module.exports = {Profiles, Musics, Accounts,SubCategory, Category, MusicAdmin, AccountType, AccountStatus}

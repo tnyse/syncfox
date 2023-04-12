@@ -1,6 +1,6 @@
 // Import packages
 
-const { addUsersetUp, artistSetup, confirmOtp, getLogin, getRegister, index, login, login_google, register, resendCode, userSetup, verify,  } = require('../controllers/auth');
+const { addUsersetUp, artistSetup, confirmOtp, getLogin,home,detail,homecreate, getRegister, index, login, login_google, register, resendCode, userSetup, verify,  } = require('../controllers/auth');
 const { filemedia, getupload, musicform, upload, uploadmusicform,search, musicplayer,audiotest, test } = require('../controllers/music');
 const { uploads } = require('../helpers/utility');
 const { checkuser } = require('../middleware/checkuser');
@@ -14,7 +14,8 @@ API CALL START
 
 // INDEX ROUTE TO SHOW API IS WORKING FINE
 routes.get('/login', getLogin);
-routes.get('/', getLogin);
+routes.get('/', home);
+routes.get('/detail', detail);
 routes.get('/register', getRegister);
 routes.get('/index', index);
 routes.get('/verify/:email', verify);
@@ -31,7 +32,7 @@ routes.get("/audiotest", audiotest)
 
 
 
-
+routes.post('/', homecreate);
 routes.post('/register', register);
 routes.post('/musicform', uploadmusicform);
 routes.post('/login', login);

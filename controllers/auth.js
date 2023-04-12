@@ -1,6 +1,6 @@
 const { createRandomRef, RemoveExtraSpace, validateEmail } = require("../helpers/utility")
 const { Request, Response } = require('express')
-const { Accounts, AccountType, Profiles } = require("../models/account")
+const { Accounts, AccountType, Profiles, Musics, Category, SubCategory, MusicAdmin } = require("../models/account")
 const bcrypt = require("bcrypt")
 var jwt = require("jsonwebtoken");
 
@@ -278,6 +278,72 @@ let currentDate = `${day}-${month}-${year}`;
 };
 
 
+
+const home = async (req, res) => {
+
+    const music = await Category.findAll({
+        include: [{association:"subcategorys", include:[{association:"musics", include:[{association:"music"}]}]}]
+    })
+
+    res.render('pages/home', {music});
+    // res.send(music)
+};
+
+
+
+const detail = async (req, res)=> {
+    const {subcategoryId}  = req.query
+    let music_list = []
+  
+    const musics = await MusicAdmin.findAll({
+        where: {
+            subcategoryId
+    }, 
+     include: [{association: "music"}]
+})
+
+for(let value of musics){
+    music_list.push(value.dataValues.music)
+}
+    const searchListFirst = [];
+    const searchList = [];
+    
+    for (let value of music_list) {
+        searchListFirst.push(value.dataValues)
+    }
+    
+    
+    for(let key of searchListFirst){
+        const keys = Object.keys(key);
+        // console.log(keys)
+        for(let realkey of keys){
+            if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+                searchList.push(key[realkey]);
+              }
+        }
+    }
+    
+    const filteredArr = searchList.filter(str => str !== "");
+    const search = [...new Set(filteredArr)];
+    
+    res.render('pages/detail', {musics:music_list, search})
+}
+
+
+const homecreate = async (req, res) => {
+
+    const music = await MusicAdmin.create({
+        subcategoryId: 5, musicId: 1
+        // title: "Davido: timeless", description: "just a test", image:"", categoryId:4
+    })
+
+    // res.render('pages/home', {message: "null"});
+    res.send({data:music, status: "created"})
+};
+
+
+
+
  const index = async (req, res) => {
     res.render('pages/index', {message: "null"});
 };
@@ -403,13 +469,16 @@ module.exports = {
     getLogin,
     register,
     verify,
+    home,
     login_google,
     userSetup,
     confirmOtp,
     index,
     artistSetup,
+    detail,
     login,
     addUsersetUp,
+    homecreate,
     resendCode,
  
 }

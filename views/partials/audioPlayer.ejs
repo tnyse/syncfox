@@ -19,7 +19,7 @@
 <style>
 
   body{
-    background-color: #101010 !important;
+    /* background-color: #101010 !important; */
   }
    
 #myProgress {
@@ -343,8 +343,14 @@ table {
        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-dark">Request licence</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-dark">Request licence</button> -->
+        <a id="requestBtn" class="btn btn-dark">Request licence</a>
+        <a href="https://res.cloudinary.com/dqth56myg/video/upload/v1677482069/prxuwntcsti7ueesfzai.mp3" class="btn btn-primary" id="downlaodBtn" download>
+          <!-- <button   type="button" class="btn btn-primary" data-dismiss="modal" >Downlaod</button> -->
+
+          Downlaod
+        </a>
+      
         
       </div>
     </div>
@@ -374,7 +380,8 @@ table {
     <%  musics.push({
       name: music[i].title,
       file: music[i].secure_url,
-      duration: music[i].length
+      duration: music[i].length,
+      ...music[i].dataValues
     })
                %>
    <% } %>
@@ -616,8 +623,22 @@ var listAudio = getMusic;
        let music = listAudio[oldIndex]
        console.log(music)
        const modal = document.getElementById("modal-body-cotent")
+       const downlaodBtn = document.getElementById("downlaodBtn")
+       const requestBtn = document.getElementById("requestBtn")
        const modaltitle = document.getElementById("exampleModalLongTitle")
-       modal.innerHTML = `Title: ${music.name}`
+       downlaodBtn.href = `${music.secure_url}`
+       requestBtn.href = `/request?music=${music.id}&account=${music.account}`
+       modal.innerHTML = 
+       `Title: ${music.name}<br>
+        Album: ${music.album}<br>
+        Comment: ${music.comment}<br>
+        composer: ${music.composer}<br>
+        Duration: ${music.duration} mins<br>
+        Genre: ${music.genre}<br>
+        TrackNumber: ${music.trackNumber}<br>
+        Year: ${music.year}<br>
+        
+        `
        modaltitle.innerHTML = `${music.name}`
 
         // this.indexAudio++;
@@ -626,6 +647,11 @@ var listAudio = getMusic;
     // }
   }
 
+
+
+
+
+  
 
 
   function previous(){

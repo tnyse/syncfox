@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="/css/slider.css">
 
-    <title>Document</title>
+    <title>Licence Request</title>
 </head>
 <body>
 
@@ -129,27 +129,14 @@
 
 
 
-      <% for (let musics of music) { %>
+      
         <div class="spotify-playlists">
-          <h2><%= musics.title %></h2>
-          <div class="list">
-
-            <% for (let subcategorys of musics.subcategorys) { %>
-              <a href="/detail?subcategoryId=<%= subcategorys.id %>&title=<%= subcategorys.title %>">
-            <div class="item" >
-              <img src="https://i.scdn.co/image/ab67616d0000b2733b5e11ca1b063583df9492db" />
-              <div class="play">
-                <span class="fa fa-play"></span>
-              </div>
-              <h4><%= subcategorys.title %></h4>
-              <p><%= subcategorys.description %></p>
-            </div>
-          </a>
-            <% } %>
-     
-          </div>
+          <h2><%= title %></h2>
         </div>
-        <% } %>
+        <div  style="overflow-x:auto; ">
+            <%- include('../partials/licenceRequest', {music: musics, requestLicence}); %>
+        </div>
+      
 
     
 
@@ -159,9 +146,6 @@
 
 
     <script src="/js/home.js"></script>
-   
-   
-   
     <script
       src="https://kit.fontawesome.com/23cecef777.js"
       crossorigin="anonymous"

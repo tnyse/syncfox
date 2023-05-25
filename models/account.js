@@ -332,7 +332,58 @@ MusicAdmin.belongsTo(Musics, {
 
 
 
+
+
+  const RequestAdmin = sequelize.define('requestadmin', {
+	id: {
+	  type: DataTypes.INTEGER,
+	  primaryKey: true,
+	  autoIncrement: true,
+	},
+	
+	budget: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	  },
+
+	  note: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	  },
+
+	  status: {
+		type: DataTypes.STRING,
+		allowNull: true,
+		defaultValue: "PENDING"
+	  },
+
+  }, {
+	// optional settings for the model
+	timestamps: true, // adds createdAt and updatedAt fields
+	freezeTableName: true, // use singular table name (default is pluralized)
+  });
+
+
+  RequestAdmin.belongsTo(Musics, {
+	foreignKey: "musicId",
+	as: "music",
+  });
+
+  RequestAdmin.belongsTo(Accounts, {
+	foreignKey: "senderId",
+	as: "sender",
+  });
+
+
+  RequestAdmin.belongsTo(Accounts, {
+	foreignKey: "recieverId",
+	as: "reciever",
+  });
+
+
+
+
   sequelize.sync()
 
 
-  module.exports = {Profiles, Musics, Accounts,SubCategory, Category, MusicAdmin, AccountType, AccountStatus}
+  module.exports = {Profiles, Musics, Accounts,SubCategory, Category, MusicAdmin, AccountType, AccountStatus, RequestAdmin}

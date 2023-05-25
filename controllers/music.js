@@ -4,12 +4,14 @@ const { arrayBufferToBase64, base64ToFile, upload_cloud,makeid } = require('../h
 const NodeID3 = require('node-id3')
 const ffprobe = require('ffprobe');
 const ffprobeStatic = require('ffprobe-static');
-const { Musics } = require('../models/account');
+const { Musics, Accounts, Profiles, RequestAdmin } = require('../models/account');
 const  fs = require('fs');
 const { Sequelize } = require('sequelize');
 const Op = Sequelize.Op;
+const { emailVerifyTemplateData, userRequestLicenceTemplateData } = require("../service/mailer/templateData")
 const path = require('path');
-
+const { prepareMail } = require("../service/mailer/mailer")
+const {config} = require('../config/configSetup');
 
 
 
@@ -235,15 +237,170 @@ const musicplayer = async (req, res) => {
 
 
 
+
+const request = async (req, res) => {
+    const id = req.cookies.id;
+    const {music, account} = req.query;
+    console.log(account);
+    const getSenderAccount = await Accounts.findOne({where:{
+        id
+    }})
+
+    const getRecieverAccount = await Accounts.findOne({where:{
+        id:account
+    }})
+
+
+    const getprofile = await Profiles.findOne({where:{
+        account: id
+    }})
+
+    const getMusic = await Musics.findOne({where: {
+        id: music
+    }})
+ 
+    console.log(getprofile.dataValues);
+    res.render('pages/requestMusic', {music:getMusic.dataValues, profile: getprofile.dataValues, sender:getSenderAccount.dataValues, reciever: getRecieverAccount.dataValues});
+};
+
+
+
+
+const sendRequest =  async (req, res) => {
+    const {recieverEmail, musicTitle, senderName, music, sender, reciever, note, budget} = req.body;
+    const { mailSubject, mailBody } = userRequestLicenceTemplateData({ names: musicTitle, email: recieverEmail, requestee:senderName });
+
+
+    try{
+        // console.log(reciever)
+        // console.log(sender)
+        // console.log(music)
+    // prepare and send mail
+    await prepareMail({
+        mailRecipients: recieverEmail,
+        mailSubject,
+        mailBody: mailBody,
+        senderName: config.MAIL_FROM_NAME,
+        senderEmail: config.MAIL_FROM,
+    });
+
+    const insertData = {
+        budget: budget.toString(),
+        note: note.toString(),
+        recieverId:reciever,
+        senderId:sender,
+        musicId:music,
+    }
+
+     await RequestAdmin.create(insertData)
+
+    res.send({ upload: true })
+    }
+    catch(e){
+        console.log(e)
+      
+        res.send({ upload: false })
+    }
+
+}
+
+
+
+
+const userRequest = async (req, res) => {
+    const id = req.cookies.id;
+
+    const getprofile = await Profiles.findOne({where:{
+        account: id
+    }})
+
+
+  const requestLicence = await  RequestAdmin.findAll({where:{
+        senderId: id
+    }})
+
+
+
+    res.render('pages/userRequest', { musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues,  admin: false});
+};
+
+
+const requestDetail = async (req, res) => {
+    const id = req.cookies.id;
+    const requestId = req.query.id;
+    const recieverId = req.query.reciever;
+
+    const getprofile = await Profiles.findOne({where:{
+        account: id
+    }})
+
+
+  const requestLicence = await  RequestAdmin.findOne({where:{
+        id: requestId
+    },
+    include: [{association:"music"}, {association:"sender"}, {association:"reciever"}]
+})
+const recieverProfile = await Profiles.findOne({where:{
+    account: recieverId
+}})
+
+
+    res.render('pages/requestDetail', { musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
+};
+
+
+
+const adminRequestDetail = async (req, res) => {
+    const id = req.cookies.id;
+    const requestId = req.query.id;
+    const recieverId = req.query.reciever;
+    const getprofile = await Profiles.findOne({where:{
+        account: id
+    }})
+  const requestLicence = await  RequestAdmin.findOne({where:{
+        id: requestId
+    },
+    include: [{association:"music"}, {association:"sender"}, {association:"reciever"}]
+})
+const recieverProfile = await Profiles.findOne({where:{
+    account: recieverId
+}})
+    res.render('pages/adminRequestDetail', { musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
+};
+
+
+
+
+const adminRequest = async (req, res) => {
+    const id = req.cookies.id;
+    const getprofile = await Profiles.findOne({where:{
+        account: id
+    }})
+  const requestLicence = await  RequestAdmin.findAll({where:{
+        senderId: id
+    }})
+    res.render('pages/adminRequestPage', { musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, admin: true});
+};
+
+
+
+
+
 module.exports ={
     upload,
     filemedia,
     uploadmusicform,
     getupload,
+    request,
     musicform,
+    sendRequest,
     musicplayer,
     test,
+    requestDetail,
     audiotest,
     search,
+    userRequest,
+    adminRequestDetail,
+    adminRequest
    
 }

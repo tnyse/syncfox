@@ -5,15 +5,13 @@ const {config} = require('../../config/configSetup');
 // Import function files
 const { SendMailDataType, PrepareMailDataType } = require('../../helpers/types');
 
-
-const transporter = nodemailer.createTransport({
-	host: "cabrequestservices.com",
-	port: 465,
-	auth: {
-	  user: config.MAIL_FROM,
-	  pass: "akpGq.TF7G(X"
-	}
-});
+let transporter = nodemailer.createTransport({
+    host: "sportdynamo.com",
+    port: 465,
+    auth: {
+      user: "info@sportdynamo.com",
+      pass: "tE#}]wzd%z{j"
+    }})
 
 // const transporter = nodemailer.createTransport({
 // 	host: "syncfox.com",

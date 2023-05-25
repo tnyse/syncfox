@@ -292,7 +292,7 @@ const home = async (req, res) => {
 
 
 const detail = async (req, res)=> {
-    const {subcategoryId}  = req.query
+    const {subcategoryId, title}  = req.query
     let music_list = []
   
     const musics = await MusicAdmin.findAll({
@@ -326,7 +326,7 @@ for(let value of musics){
     const filteredArr = searchList.filter(str => str !== "");
     const search = [...new Set(filteredArr)];
     
-    res.render('pages/detail', {musics:music_list, search})
+    res.render('pages/detail', {musics:music_list, search, title})
 }
 
 
@@ -345,7 +345,44 @@ const homecreate = async (req, res) => {
 
 
  const index = async (req, res) => {
-    res.render('pages/index', {message: "null"});
+
+    // const  account = req.cookies.id;
+    const musics = await Musics.findAll({where:{
+        // account: account
+    }})
+
+
+    const music = await Category.findAll({
+        include: [{association:"subcategorys", include:[{association:"musics", include:[{association:"music"}]}]}]
+    })
+
+
+
+
+    const searchListFirst = [];
+    const searchList = [];
+    
+    for (let value of musics) {
+        searchListFirst.push(value.dataValues)
+    }
+    
+    
+    
+    for(let key of searchListFirst){
+        const keys = Object.keys(key);
+        // console.log(keys)
+        for(let realkey of keys){
+            if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+                searchList.push(key[realkey]);
+              }
+        }
+    }
+    
+    const filteredArr = searchList.filter(str => str !== "");
+    const search = [...new Set(filteredArr)];
+
+    res.render('pages/index', {music, search});
+    // res.render('pages/index', {message: "null"});
 };
 
 

@@ -3,7 +3,7 @@
 
  const userOnboardingTemplateData = ({ names, email, type}) => {
 	return {
-		mailSubject: 'Staff Onboarding',
+		mailSubject: 'Welcome to Syncfox',
 		mailBody: `
 			<p style="font-weight: 600; font-size: 18px; margin-bottom: 0;">Welcome onboard, ${names.split(' ')[0]}</p>
 			<p>you are requested to join ${names}.</p>
@@ -12,6 +12,25 @@
 			<a ">Review Invitation</a>
 			
 			<p>New on simplefinance? You will be prompted to change your account's default's password upon login.</p>
+		`,
+	};
+};
+
+
+
+
+
+const userRequestLicenceTemplateData = ({ names, email, requestee}) => {
+	return {
+		mailSubject: 'Song Licence Request',
+		mailBody: `
+			
+			<p>${names} usage licence is being requestd by ${requestee}.</p>
+			
+			<p>click the link below to review the request.</p>
+			
+			
+			<p>New on syncfox? You will be prompted to change your account's default's password upon login.</p>
 		`,
 	};
 };
@@ -33,4 +52,4 @@
 
 
 
-module.exports = {emailVerifyTemplateData, userOnboardingTemplateData}
+module.exports = {emailVerifyTemplateData, userOnboardingTemplateData, userRequestLicenceTemplateData}

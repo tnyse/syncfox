@@ -12,6 +12,14 @@
     font-size: 14px;
 } */
 
+/* #exampleModalLong{
+    z-index: 2 !important;
+} */
+
+.modal-backdrop{
+    z-index: 1 !important;
+}
+
 .music-player {
     position:fixed;
     bottom:0px;

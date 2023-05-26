@@ -306,6 +306,62 @@ const sendRequest =  async (req, res) => {
 
 
 
+const newRequestDetail = async (req, res) => {
+  
+    const id = req.cookies.id;
+    const requestId = req.query.id;
+    const recieverId = req.query.reciever;
+
+    const getprofile = await Profiles.findOne({where:{
+        account: id
+    }})
+
+
+  const requestLicence = await  RequestAdmin.findOne({where:{
+        id: requestId
+    },
+    include: [{association:"music"}, {association:"sender"}, {association:"reciever"}]
+})
+const recieverProfile = await Profiles.findOne({where:{
+    account: recieverId
+}})
+
+const musics = await Musics.findAll({where:{
+  
+}})
+
+
+
+
+const searchListFirst = [];
+const searchList = [];
+
+for (let value of musics) {
+    searchListFirst.push(value.dataValues)
+}
+
+
+
+for(let key of searchListFirst){
+    const keys = Object.keys(key);
+    // console.log(keys)
+    for(let realkey of keys){
+        if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+            searchList.push(key[realkey]);
+          }
+    }
+}
+
+const filteredArr = searchList.filter(str => str !== "");
+const search = [...new Set(filteredArr)];
+
+    res.render('pages/newrequest-detail', {search, musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
+};
+
+
+
+
+
 
 const userRequest = async (req, res) => {
     const id = req.cookies.id;
@@ -315,13 +371,42 @@ const userRequest = async (req, res) => {
     }})
 
 
+    const musics = await Musics.findAll({where:{
+  
+    }})
+
+
+
+
+    const searchListFirst = [];
+    const searchList = [];
+    
+    for (let value of musics) {
+        searchListFirst.push(value.dataValues)
+    }
+    
+    
+    
+    for(let key of searchListFirst){
+        const keys = Object.keys(key);
+        // console.log(keys)
+        for(let realkey of keys){
+            if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+                searchList.push(key[realkey]);
+              }
+        }
+    }
+    
+    const filteredArr = searchList.filter(str => str !== "");
+    const search = [...new Set(filteredArr)];
+
   const requestLicence = await  RequestAdmin.findAll({where:{
         senderId: id
     }})
 
 
 
-    res.render('pages/userRequest', { musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues,  admin: false});
+    res.render('pages/userRequest', { search, musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues,  admin: false});
 };
 
 
@@ -379,7 +464,37 @@ const adminRequest = async (req, res) => {
   const requestLicence = await  RequestAdmin.findAll({where:{
         senderId: id
     }})
-    res.render('pages/adminRequestPage', { musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, admin: true});
+    const musics = await Musics.findAll({where:{
+  
+    }})
+
+
+
+    const searchListFirst = [];
+    const searchList = [];
+    
+    for (let value of musics) {
+        searchListFirst.push(value.dataValues)
+    }
+    
+    
+    
+    for(let key of searchListFirst){
+        const keys = Object.keys(key);
+        // console.log(keys)
+        for(let realkey of keys){
+            if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+                searchList.push(key[realkey]);
+              }
+        }
+    }
+    
+    const filteredArr = searchList.filter(str => str !== "");
+    const search = [...new Set(filteredArr)];
+
+ 
+
+    res.render('pages/adminRequestPage', {search, musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, admin: true});
 };
 
 
@@ -401,6 +516,7 @@ module.exports ={
     search,
     userRequest,
     adminRequestDetail,
-    adminRequest
+    adminRequest,
+    newRequestDetail
    
 }

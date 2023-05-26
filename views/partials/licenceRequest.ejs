@@ -19,7 +19,7 @@
 <style>
 
   body{
-    background-color: #101010 !important;
+    /* background-color: #101010 !important; */
   }
    
 #myProgress {
@@ -413,7 +413,7 @@ table {
  let admin_value = <%- admin %>
 
 function navigateToDetail(id, reciever){
-  let url = "/request-detail";
+  let url = "/newrequest-detail";
   let admin_url = "/admin-request-detail";
   window.location.href = `${admin_value==true?admin_url:url}?id=${id}&reciever=${reciever}`;
 }

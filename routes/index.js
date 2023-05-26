@@ -1,7 +1,7 @@
 // Import packages
 
 const { addUsersetUp,  artistSetup, confirmOtp, getLogin,home,detail,homecreate, getRegister, index, login, login_google, register, resendCode, userSetup, verify,  } = require('../controllers/auth');
-const { filemedia, getupload,adminRequestDetail, adminRequest, requestDetail,userRequest, musicform, upload, uploadmusicform,search, musicplayer,audiotest, test, request, sendRequest } = require('../controllers/music');
+const { filemedia, getupload,adminRequestDetail, adminRequest, requestDetail,userRequest, newRequestDetail, musicform, upload, uploadmusicform,search, musicplayer,audiotest, test, request, sendRequest } = require('../controllers/music');
 const { uploads } = require('../helpers/utility');
 const { checkuser } = require('../middleware/checkuser');
 
@@ -33,6 +33,7 @@ routes.get("/audiotest", audiotest)
 routes.get("/request-detail", requestDetail)
 routes.get("/admin-request-detail", adminRequestDetail)
 routes.get("/admin-request", adminRequest)
+routes.get("/newrequest-detail", newRequestDetail)
 
 
 

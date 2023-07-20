@@ -165,6 +165,153 @@ table {
   <body>
 
 
+    <div class="row clearfix">
+      <div class="col-lg-12">
+          <div class="card">
+             
+              <div class="body">
+                 
+                  <ul class="nav nav-tabs padding-0">
+                      <li class="nav-item inlineblock"><a class="nav-link active" data-toggle="tab" href="#details" aria-expanded="true">PENDING</a></li>
+                      <li class="nav-item inlineblock"><a class="nav-link" data-toggle="tab" href="#notes" aria-expanded="false">ACCEPTED</a></li>
+                      <li class="nav-item inlineblock"><a class="nav-link" data-toggle="tab" href="#history" aria-expanded="false">DECLINED</a></li>
+                  </ul>                
+              </div>
+          </div>
+          <div class="tab-content">
+              <div role="tabpanel" class="tab-pane in active" id="details" aria-expanded="true">
+           
+
+                <div class="table-responsive-vertical shadow-z-1" style="overflow-x:auto;"></div>
+  <table id="table" class="table table-hover table-mc-light-blue">
+    <thead class="thead">
+        <tr class="thead2">
+
+          <th>Date</th>
+          <th>Budget</th>
+          <th>Note</th>
+          <th>Status</th>
+    
+              <!-- <th><i class="fa fa-chevron-down"></i></th> -->
+        </tr>
+      </thead>
+      
+
+      <tbody class="playlist-ctn">
+        <% for(var i=0; i < requestLicence.length; i++) { %>
+          
+         
+          <% if(requestLicence[i].status === "PENDING") {%>
+            <tr class="playlist-track-ctn" id="ptc-0" data-index="0" data-title="Length" onclick="navigateToDetail(`<%= requestLicence[i].id %>`, `<%= requestLicence[i].recieverId %>`)">
+             
+              <td class="playlist-info-track"><%= requestLicence[i].createdAt.toLocaleDateString("en-US") %></td>
+       
+            
+            <td class="playlist-info-track"><%= requestLicence[i].budget %>...</td>
+            <td class="playlist-info-track"><%= requestLicence[i].note.toString().substring(0, 10) %></td>
+            <td class="playlist-info-track"><%= requestLicence[i].status%></td>
+         </tr>
+        
+            <% } %>
+          
+      
+       
+        <%  } %>
+     </tbody>
+
+     
+  </table>
+
+              </div>
+              <div role="tabpanel" class="tab-pane" id="notes" aria-expanded="false">
+                <div class="table-responsive-vertical shadow-z-1" style="overflow-x:auto;"></div>
+                <table id="table" class="table table-hover table-mc-light-blue">
+                  <thead class="thead">
+                      <tr class="thead2">
+              
+                        <th>Date</th>
+                        <th>Budget</th>
+                        <th>Note</th>
+                        <th>Status</th>
+                  
+                            <!-- <th><i class="fa fa-chevron-down"></i></th> -->
+                      </tr>
+                    </thead>
+                    
+              
+                    <tbody class="playlist-ctn">
+                      <% for(var i=0; i < requestLicence.length; i++) { %>
+                        
+                       
+                        <% if(requestLicence[i].status === "ACCEPTED") {%>
+                          <tr class="playlist-track-ctn" id="ptc-0" data-index="0" data-title="Length" onclick="navigateToDetail(`<%= requestLicence[i].id %>`, `<%= requestLicence[i].recieverId %>`)">
+                           
+                            <td class="playlist-info-track"><%= requestLicence[i].createdAt.toLocaleDateString("en-US") %></td>
+                     
+                          
+                          <td class="playlist-info-track"><%= requestLicence[i].budget %>...</td>
+                          <td class="playlist-info-track"><%= requestLicence[i].note.toString().substring(0, 10) %></td>
+                          <td class="playlist-info-track"><%= requestLicence[i].status%></td>
+                       </tr>
+                      
+                          <% } %>
+                        
+                    
+                     
+                      <%  } %>
+                   </tbody>
+              
+                   
+                </table>
+               
+              </div>
+              <div role="tabpanel" class="tab-pane" id="history" aria-expanded="false">
+                <div class="table-responsive-vertical shadow-z-1" style="overflow-x:auto;"></div>
+                <table id="table" class="table table-hover table-mc-light-blue">
+                  <thead class="thead">
+                      <tr class="thead2">
+              
+                        <th>Date</th>
+                        <th>Budget</th>
+                        <th>Note</th>
+                        <th>Status</th>
+                  
+                            <!-- <th><i class="fa fa-chevron-down"></i></th> -->
+                      </tr>
+                    </thead>
+                    
+              
+                    <tbody class="playlist-ctn">
+                      <% for(var i=0; i < requestLicence.length; i++) { %>
+                        
+                       
+                         <% if(requestLicence[i].status === "DECLINED") {%>
+                          <tr class="playlist-track-ctn" id="ptc-0" data-index="0" data-title="Length" onclick="navigateToDetail(`<%= requestLicence[i].id %>`, `<%= requestLicence[i].recieverId %>`)">
+                           
+                            <td class="playlist-info-track"><%= requestLicence[i].createdAt.toLocaleDateString("en-US") %></td>
+                     
+                          
+                          <td class="playlist-info-track"><%= requestLicence[i].budget %>...</td>
+                          <td class="playlist-info-track"><%= requestLicence[i].note.toString().substring(0, 10) %></td>
+                          <td class="playlist-info-track"><%= requestLicence[i].status%></td>
+                       </tr>
+                      
+                          <% } %>
+                    
+                     
+                      <%  } %>
+                   </tbody>
+              
+                   
+                </table>
+               
+              </div>                   
+          </div>
+      </div>
+  </div>
+
+
+
 <audio id="myAudio" ontimeupdate="onTimeUpdate()">
   <!-- <source src="audio.ogg" type="audio/ogg"> -->
   <source id="source-audio" src="" type="audio/mpeg">
@@ -302,43 +449,7 @@ table {
   </div>
 
 
-  <div class="table-responsive-vertical shadow-z-1" style="overflow-x:auto;"></div>
-  <table id="table" class="table table-hover table-mc-light-blue">
-    <thead class="thead">
-        <tr class="thead2">
-
-          <th>Date</th>
-          <th>Budget</th>
-          <th>Note</th>
-          <th>Status</th>
-    
-              <!-- <th><i class="fa fa-chevron-down"></i></th> -->
-        </tr>
-      </thead>
-      
-
-      <tbody class="playlist-ctn">
-        <% for(var i=0; i < requestLicence.length; i++) { %>
-          
-         
-            <tr class="playlist-track-ctn" id="ptc-0" data-index="0" data-title="Length" onclick="navigateToDetail(`<%= requestLicence[i].id %>`, `<%= requestLicence[i].recieverId %>`)">
-             
-                <td class="playlist-info-track"><%= requestLicence[i].createdAt.toLocaleDateString("en-US") %></td>
-         
-              
-              <td class="playlist-info-track"><%= requestLicence[i].budget %>...</td>
-              <td class="playlist-info-track"><%= requestLicence[i].note.toString().substring(0, 10) %></td>
-              <td class="playlist-info-track"><%= requestLicence[i].status%></td>
-           </tr>
-          
-      
-       
-        <%  } %>
-     </tbody>
-
-     
-  </table>
-  </div>
+  
 </div>
 
 

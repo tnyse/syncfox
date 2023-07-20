@@ -1,7 +1,7 @@
 // Import packages
 
 const { addUsersetUp,  artistSetup, confirmOtp, getLogin,home,detail,homecreate, getRegister, index, login, login_google, register, resendCode, userSetup, verify,  } = require('../controllers/auth');
-const { filemedia, getupload,adminRequestDetail, adminRequest, requestDetail,userRequest, newRequestDetail, musicform, upload, uploadmusicform,search, musicplayer,audiotest, test, request, sendRequest } = require('../controllers/music');
+const { filemedia, getupload,adminRequestDetail, adminRequest, requestDetail,userRequest, newRequestDetail, musicform, upload, uploadmusicform,search, musicplayer,audiotest, test, request, sendRequest, sendMessage } = require('../controllers/music');
 const { uploads } = require('../helpers/utility');
 const { checkuser } = require('../middleware/checkuser');
 
@@ -50,6 +50,7 @@ routes.post("/google_login", login_google)
 routes.post('/user-setup', addUsersetUp);
 routes.post("/request", sendRequest)
 routes.post('/confirm', confirmOtp);
+routes.post('/sendMessage', sendMessage);
 
 
 

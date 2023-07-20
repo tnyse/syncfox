@@ -192,7 +192,7 @@ let currentDate = `${day}-${month}-${year}`;
 
      
         else {
-            bcrypt.compare(password, accountUser[0].password).then(function (result) {
+            bcrypt.compare(password, accountUser[0].password).then(async function (result) {
                 if (!result) {
                     res.render('pages/sign-in', { message: "invalid credentials" })
                     //   res.status(400).send({ message: "invalid credentials" });
@@ -203,8 +203,45 @@ let currentDate = `${day}-${month}-${year}`;
                         expiresIn: "3600000000s",
                     });
                    
+
+                       // const  account = req.cookies.id;
+    const musics = await Musics.findAll({where:{
+        // account: account
+    }})
+
+
+    const music = await Category.findAll({
+        include: [{association:"subcategorys", include:[{association:"musics", include:[{association:"music"}]}]}]
+    })
+
+
+
+
+    const searchListFirst = [];
+    const searchList = [];
+    
+    for (let value of musics) {
+        searchListFirst.push(value.dataValues)
+    }
+    
+    
+    
+    for(let key of searchListFirst){
+        const keys = Object.keys(key);
+        // console.log(keys)
+        for(let realkey of keys){
+            if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+                searchList.push(key[realkey]);
+              }
+        }
+    }
+    
+    const filteredArr = searchList.filter(str => str !== "");
+    const search = [...new Set(filteredArr)];
+
+    res.render('pages/index', {music, search});
                      
-                    res.render('pages/index', { message: "" })
+                    // res.render('pages/index', { message: "" })
                     //   res.status(400).send({ message: "invalid credentials" });
                 }
             });
@@ -263,8 +300,43 @@ let currentDate = `${day}-${month}-${year}`;
                 senderEmail: config.MAIL_FROM,
             });
 
-            
-            res.render('pages/index', { message: "" })
+               // const  account = req.cookies.id;
+    const musics = await Musics.findAll({where:{
+        // account: account
+    }})
+
+
+    const music = await Category.findAll({
+        include: [{association:"subcategorys", include:[{association:"musics", include:[{association:"music"}]}]}]
+    })
+
+
+
+
+    const searchListFirst = [];
+    const searchList = [];
+    
+    for (let value of musics) {
+        searchListFirst.push(value.dataValues)
+    }
+    
+    
+    
+    for(let key of searchListFirst){
+        const keys = Object.keys(key);
+        // console.log(keys)
+        for(let realkey of keys){
+            if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+                searchList.push(key[realkey]);
+              }
+        }
+    }
+    
+    const filteredArr = searchList.filter(str => str !== "");
+    const search = [...new Set(filteredArr)];
+
+    res.render('pages/index', {music, search});
+            // res.render('pages/index', { message: "" })
 		
     
     
@@ -281,11 +353,47 @@ let currentDate = `${day}-${month}-${year}`;
 
 const home = async (req, res) => {
 
-    const music = await Category.findAll({
-        include: [{association:"subcategorys", include:[{association:"musics", include:[{association:"music"}]}]}]
-    })
 
-    res.render('pages/home', {music});
+
+   // const  account = req.cookies.id;
+   const musics = await Musics.findAll({where:{
+    // account: account
+}})
+
+
+const music = await Category.findAll({
+    include: [{association:"subcategorys", include:[{association:"musics", include:[{association:"music"}]}]}]
+})
+
+
+
+
+const searchListFirst = [];
+const searchList = [];
+
+for (let value of musics) {
+    searchListFirst.push(value.dataValues)
+}
+
+
+
+for(let key of searchListFirst){
+    const keys = Object.keys(key);
+    // console.log(keys)
+    for(let realkey of keys){
+        if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
+            searchList.push(key[realkey]);
+          }
+    }
+}
+
+const filteredArr = searchList.filter(str => str !== "");
+const search = [...new Set(filteredArr)];
+
+res.render('pages/index', {music, search});
+
+
+    // res.render('pages/index', {music});
     // res.send(music)
 };
 
@@ -337,7 +445,7 @@ const homecreate = async (req, res) => {
         // title: "Davido: timeless", description: "just a test", image:"", categoryId:4
     })
 
-    // res.render('pages/home', {message: "null"});
+    // res.render('pages/index', {message: "null"});
     res.send({data:music, status: "created"})
 };
 

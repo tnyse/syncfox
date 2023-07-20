@@ -38,6 +38,25 @@ const userRequestLicenceTemplateData = ({ names, email, requestee}) => {
 
 
 
+
+const userMessageTemplateData = ({ names, email, requestee, note}) => {
+	return {
+		mailSubject: 'Song Licence Request Comment',
+		mailBody: `
+			
+			<p>${names} usage licence is being requestd by ${requestee}.</p>
+			
+			<p>${note}</p>
+			
+			
+			<p>New on syncfox? You will be prompted to change your account's default's password upon login.</p>
+		`,
+	};
+};
+
+
+
+
  const emailVerifyTemplateData = ({otp, name}) => {
 	return {
 		mailSubject: 'Email Verification',
@@ -52,4 +71,4 @@ const userRequestLicenceTemplateData = ({ names, email, requestee}) => {
 
 
 
-module.exports = {emailVerifyTemplateData, userOnboardingTemplateData, userRequestLicenceTemplateData}
+module.exports = {emailVerifyTemplateData, userOnboardingTemplateData, userRequestLicenceTemplateData, userMessageTemplateData}

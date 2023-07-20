@@ -656,7 +656,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-6 text-right">
                                         <p class="m-b-0"><strong>Licence Date: </strong> <%= requestLicence.createdAt.toLocaleDateString("en-US") %></p>
-                                        <p class="m-b-0"><strong>Licence Status: </strong> <span class="badge badge-warning m-b-0"><%= requestLicence.status  %></span></p>
+                                        <p class="m-b-0"><strong>Licence Status: </strong> <span class="<%= requestLicence.status=="DECLINED" ? 'badge badge-danger' : requestLicence.status=="ACCEPTED" ?'badge badge-success':'badge badge-warning' %> m-b-0"><%= requestLicence.status  %></span></p>
                                         <p><strong>Order ID: </strong> # <%= requestLicence.id %></p>
                                     </div>
                                 </div>
@@ -736,51 +736,108 @@
                                     </div>                                    
                                     <div class="hidden-print col-md-12 text-right">
                                       <hr>
+            
+                                        
+                                        
+                                        <% if (requestLicence.status==="DECLINED") { %>
+                                            <button class="btn btn-primary btn-round" type="button" data-toggle="modal" data-target="#exampleModal">Approve</button>
+                                          <% } else if (requestLicence.status==="PENDING") { %>
+                                            <button class="btn btn-primary btn-round" type="button" data-toggle="modal" data-target="#exampleModal">Approve</button>
+                                            <button  type="button" class="btn btn-danger btn-round" data-toggle="modal" data-target="#exampleModal2">Decline</button>
+                                          <% } else { %>
+                                            <button  type="button" class="btn btn-danger btn-round" data-toggle="modal" data-target="#exampleModal2">Decline</button>
+                                          <% } %>
                                     
-                                      <button class="btn btn-primary btn-round">Approve</button>
-                                      <button class="btn btn-danger btn-round">Deline</button>
                                   </div>
                                 </div>    
                                 
                                 <hr>
-                                <h5>Comments (0)</h5>
+                                <h5>Comments (<%- message.length %>)</h5>
                                 <hr>
                                 <div class="chat-history clearfix">
                                     <ul class="" style="list-style-type:none">
-                                        <li class="clearfix">
-                                            <div class="message-data text-right"> <span class="message-data-time" >10:10 AM, Today</span> &nbsp; &nbsp; <span class="message-data-name" >Michael</span> <i class="zmdi zmdi-circle me"></i> </div>
-                                            <div class="message text-right other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
-                                        </li>
-                                        <li>
-                                            <div class="message-data">
-                                                <span class="message-data-name"><i class="zmdi zmdi-circle online"></i> Aiden</span> <span class="message-data-time">10:12 AM, Today</span>
-                                            </div>
-                                            <div class="message my-message">
-                                                <span>Are we meeting today? Project has been already finished and I have results to show you.</span>                                            
-                                            </div>
-                                        </li>
-                                        <li class="clearfix">
-                                            <div class="message-data text-right"> <span class="message-data-time" >10:10 AM, Today</span> &nbsp; &nbsp; <span class="message-data-name" >Michael</span> <i class="zmdi zmdi-circle me"></i> </div>
-                                            <div class="message text-right other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
-                                        </li>
-                                        <li>
-                                            <div class="message-data">
-                                                <span class="message-data-name"><i class="zmdi zmdi-circle online"></i> Aiden</span> <span class="message-data-time">10:12 AM, Today</span>
-                                            </div>
-                                            <div class="message my-message">
-                                                <span>Are we meeting today? Project has been already finished and I have results to show you.</span>                                            
-                                            </div>
-                                        </li>
+                                        <% function generateTime(dates) { %>
+                                                  
+                                            <% const datetime = new Date(dates); %>
+
+                                        
+                                            <% const time = datetime.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }); %>
+
+                                            <% const today = new Date(); %>
+                                            <% const yesterday = new Date(today); %>
+                                            <%   yesterday.setDate(yesterday.getDate() - 1); %>
+                                            <% const date = (datetime.toDateString() === today.toDateString()) ? 'Today' :datetime.toDateString() === yesterday.toDateString()?"Yesterday": datetime.toLocaleDateString('en-US'); %>
+
+                                            <% const formattedDateTime = time + ', ' + date; %>
+
+                                            <span class="message-data-time" ><%= formattedDateTime %></span>
+                                          <% } %>
+
+
+                                         <% function capitalizeWords(str) {%>
+                                           
+                                            <% var words = str.split(' ');%>
+                                          
+                                            
+                                            <% for (var i = 0; i < words.length; i++) {%>
+                                                <% var word = words[i];%>
+                                          
+                                             
+                                              <% var capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1);%>
+                                          
+                                             
+                                              <% words[i] = capitalizedWord;%>
+                                              <% }%>
+                                          
+                                            
+                                            <%   var capitalizedString = words.join(' ');%>
+                                          
+                                            <%  return capitalizedString;%>
+                                            <%  } %>
+                                          
+                                          
+                                        <% for (var i = 0; i < message.length; i++) { %>
+                                            <!-- Code to execute for each iteration -->
+                                            <% if (Number(message[i].senderId) === Number(userId)) { %>
+                                              
+
+                                                <li class="clearfix">
+                                                    <div class="message-data text-right">  <%= generateTime(message[i].createdAt) %> &nbsp; &nbsp; <span class="message-data-name" ><%= capitalizeWords(message[i].sender.dataValues.username) %></span> <i class="zmdi zmdi-circle me"></i> </div>
+                                                    <div class="message text-right other-message float-right"> <%= message[i].note %> </div>
+                                                </li>
+
+                                              <% } else { %>
+
+                                                 
+                                                <li>
+                                                    <div class="message-data">
+                                                        <span class="message-data-name"><i class="zmdi zmdi-circle online"></i> <%= capitalizeWords(message[i].sender.dataValues.username) %></span> <span class="message-data-time"> <%= generateTime(message[i].createdAt ) %></span>
+                                                    </div>
+                                                    <div class="message my-message">
+                                                        <span><%= message[i].note %>.</span>                                            
+                                                    </div>
+                                                </li>
+                                                
+                                              <% } %>
+                                          <% } %>
+                                        
+
+
+                                       
                                     </ul>
                                 </div>
                                 <hr>
+                               <% if(requestLicence.status=="DECLINED"){ %>
                                 <div class="chat-message clearfix">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Enter text here...">
-                                        <span class="input-group-addon"><i class="zmdi zmdi-mail-send"></i></span>
+                                        <input id="note" type="text" class="form-control" placeholder="Enter text here...">
+                                        <span id="uplaoding2" class="input-group-addon">...</span>
+                                        <span id="uplaoding1" onclick="reply()" class="input-group-addon"><i class="zmdi zmdi-mail-send"></i></span>
                                     </div>
                                   
                                 </div>
+                                <%} %>
+                               
                             </div>
                         </div>
                     </div>
@@ -791,7 +848,210 @@
     </div>
 </section>
 
+
+<!-- Modal for accept-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Accept Licence Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Continue to accept licence request
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       
+        <button  id="uplaoding2" type="button" class="btn btn-primary">Processing</button>
+        <button  id="uplaoding1" type="button" class="btn btn-primary" onclick="approve()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal for accept-->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Decline reason</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="reject">
+         
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text" name="note"></textarea>
+          </div>
+        </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            
+            <button  id="uplaoding4" type="button" class="btn btn-danger">Processing</button>
+            <button  id="uplaoding3" type="button" class="btn btn-danger" onclick="decline()">Decline</button>
+          </div>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
 <!-- Jquery Core Js --> 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+        const uplaoding4 = document.getElementById("uplaoding4");
+        const uplaoding3 = document.getElementById("uplaoding3");
+        const uplaoding2 = document.getElementById("uplaoding2");
+        const uplaoding1 = document.getElementById("uplaoding1");
+        uplaoding2.style.display = "none";
+        uplaoding4.style.display = "none";
+        
+       
+    let getData = <%- JSON.stringify({
+        recieverEmail:  requestLicence.sender.email ,
+        musicTitle: requestLicence.music.title, 
+        senderName: "Admin",
+        requestId: requestLicence.id, 
+        senderId: userId, 
+        recieverId: requestLicence.recieverId,
+    }) %>
+    
+    let temData = getData;
+    console.log(temData);
+    
+    
+        
+        function showLoadBtn(){
+            uplaoding2.style.display = "none";
+           uplaoding1.style.display = "block";
+    
+           uplaoding4.style.display = "none";
+           uplaoding3.style.display = "block";
+        }
+        
+        function hideLoadBtn(){
+           uplaoding1.style.display = "none";
+           uplaoding2.style.display = "block";
+    
+           uplaoding3.style.display = "none";
+           uplaoding4.style.display = "block";
+        }
+        
+           function decline(){
+            hideLoadBtn();
+            const inputElement = document.getElementById("reject");
+            const note =  document.getElementById("message-text");
+            let textFieldValue = note.value;
+        // const file = inputElement.files[0];
+        // {recieverEmail, musicTitle, senderName, requestId, senderId, recieverId, }
+        
+        axios.post('/sendMessage', 
+        {...getData,
+           note:textFieldValue,
+           status: false,
+        } )
+          .then((response) => {
+           console.log(response.data)
+        if(response.data.upload){
+            location.reload()
+            // const myJSON = JSON.stringify(response.data.date);
+            // localStorage.setItem("music", myJSON)
+        }
+            showLoadBtn()
+            
+        // const myObj = JSON.parse(localStorage.getItem("music"));
+        // console.log(myObj);
+            
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+            }
+    
+    
+    
+    
+    
+           function reply(){
+            hideLoadBtn();
+            const inputElement = document.getElementById("reject");
+            const note =  document.getElementById("note");
+            let textFieldValue = note.value;
+        // const file = inputElement.files[0];
+        // {recieverEmail, musicTitle, senderName, requestId, senderId, recieverId, }
+        
+        axios.post('/sendMessage', 
+         {...getData,
+           note:textFieldValue,
+           status: "",
+        } )
+          .then((response) => {
+           console.log(response.data)
+        if(response.data.upload){
+            location.reload()
+            // const myJSON = JSON.stringify(response.data.date);
+            // localStorage.setItem("music", myJSON)
+        }
+            showLoadBtn()
+            
+        // const myObj = JSON.parse(localStorage.getItem("music"));
+        // console.log(myObj);
+            
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+            }
+    
+    
+    
+    
+    
+    
+            function approve(){
+            hideLoadBtn();
+          
+            console.log( {...getData,
+           note:"LICENCE APPROVED",
+           status: true,
+        })
+        // const file = inputElement.files[0];
+        // {recieverEmail, musicTitle, senderName, requestId, senderId, recieverId, }
+        
+        axios.post('/sendMessage', 
+        {...getData,
+           note:"LICENCE APPROVED",
+           status: true,
+        } )
+          .then((response) => {
+           console.log(response.data)
+        if(response.data.upload){
+            location.reload()
+            // const myJSON = JSON.stringify(response.data.date);
+            // localStorage.setItem("music", myJSON)
+        }
+            showLoadBtn()
+            
+        // const myObj = JSON.parse(localStorage.getItem("music"));
+        // console.log(myObj);
+            
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+            }
+    
+    
+        </script>
 <script src="/bundles/libscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js --> 
 <script src="/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js --> 
 
@@ -808,5 +1068,8 @@
         $(".chat .user_detail").toggleClass("show");
     });
 </script>
+
+
+
 </body>
 </html>

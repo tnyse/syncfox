@@ -4,11 +4,11 @@ const { arrayBufferToBase64, base64ToFile, upload_cloud,makeid } = require('../h
 const NodeID3 = require('node-id3')
 const ffprobe = require('ffprobe');
 const ffprobeStatic = require('ffprobe-static');
-const { Musics, Accounts, Profiles, RequestAdmin } = require('../models/account');
+const { Musics, Accounts, Profiles, RequestAdmin, Message } = require('../models/account');
 const  fs = require('fs');
 const { Sequelize } = require('sequelize');
 const Op = Sequelize.Op;
-const { emailVerifyTemplateData, userRequestLicenceTemplateData } = require("../service/mailer/templateData")
+const { emailVerifyTemplateData, userRequestLicenceTemplateData, userMessageTemplateData } = require("../service/mailer/templateData")
 const path = require('path');
 const { prepareMail } = require("../service/mailer/mailer")
 const {config} = require('../config/configSetup');
@@ -311,12 +311,9 @@ const newRequestDetail = async (req, res) => {
     const id = req.cookies.id;
     const requestId = req.query.id;
     const recieverId = req.query.reciever;
-
     const getprofile = await Profiles.findOne({where:{
         account: id
     }})
-
-
   const requestLicence = await  RequestAdmin.findOne({where:{
         id: requestId
     },
@@ -326,36 +323,19 @@ const recieverProfile = await Profiles.findOne({where:{
     account: recieverId
 }})
 
-const musics = await Musics.findAll({where:{
-  
-}})
+
+const message = await Message.findAll({where:{
+    requestId,
+},
+include: [{association:"sender"}, {association:"reciever"}, {association:"request"},] 
+})
+// console.log(message[0].sender.dataValues.username )
 
 
+    res.render('pages/newrequest-detail', {userId: id, message, musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
 
 
-const searchListFirst = [];
-const searchList = [];
-
-for (let value of musics) {
-    searchListFirst.push(value.dataValues)
-}
-
-
-
-for(let key of searchListFirst){
-    const keys = Object.keys(key);
-    // console.log(keys)
-    for(let realkey of keys){
-        if (realkey === "album" || realkey === "title" || realkey==="genre"|| realkey==="composer" || realkey==="comment") {
-            searchList.push(key[realkey]);
-          }
-    }
-}
-
-const filteredArr = searchList.filter(str => str !== "");
-const search = [...new Set(filteredArr)];
-
-    res.render('pages/newrequest-detail', {search, musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
+    // res.render('pages/newrequest-detail', {search, musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
 };
 
 
@@ -450,7 +430,16 @@ const adminRequestDetail = async (req, res) => {
 const recieverProfile = await Profiles.findOne({where:{
     account: recieverId
 }})
-    res.render('pages/adminRequestDetail', { musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
+
+
+const message = await Message.findAll({where:{
+    requestId,
+},
+include: [{association:"sender"}, {association:"reciever"}, {association:"request"},] 
+})
+
+
+    res.render('pages/adminRequestDetail', {userId: id, message, musics: [],title: "Licence Requests", requestLicence, profile: getprofile.dataValues, recieverProfile});
 };
 
 
@@ -501,9 +490,63 @@ const adminRequest = async (req, res) => {
 
 
 
+const sendMessage =  async (req, res) => {
+    const {recieverEmail, musicTitle, senderName, status, requestId, senderId, recieverId, note} = req.body;
+    console.log({recieverEmail, musicTitle, senderName, status, requestId, senderId, recieverId, note})
+    const { mailSubject, mailBody } = userMessageTemplateData({ names: musicTitle, email: recieverEmail, requestee:senderName , note});
+    try{
+    await prepareMail({
+        mailRecipients: recieverEmail,
+        mailSubject,
+        mailBody: mailBody,
+        senderName: config.MAIL_FROM_NAME,
+        senderEmail: config.MAIL_FROM,
+    });
+
+
+    const request = await RequestAdmin.findOne({
+        where:{
+            id: requestId
+        }
+    })
+ if(status){
+     await request.update({
+        status: "ACCEPTED"
+     })
+    
+ }else{
+    const insertData = {
+        senderId, recieverId, requestId, note, 
+    }
+     await request.update({
+        status: "DECLINED"
+     })
+     await Message.create(insertData)
+ }
+console.log({ upload: true })
+    res.send({ upload: true })
+    }
+    catch(e){
+        console.log({ upload: false })
+      
+        res.send({ upload: false })
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
 module.exports ={
     upload,
     filemedia,
+    sendMessage,
     uploadmusicform,
     getupload,
     request,

@@ -24,7 +24,7 @@ const sequelize = new Sequelize(config.DBNAME, config.DBUSERNAME, config.DBPASSW
 	dialect: 'mysql',
 	logging: false,
 	dialectOptions: {
-		ssl: { require: false, rejectUnauthorized: false },
+		// ssl: { require: false, rejectUnauthorized: false },
 	},
 	// models: [
 	// 	Accounts,

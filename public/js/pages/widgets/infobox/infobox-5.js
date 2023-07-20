@@ -12,7 +12,7 @@ function initCounters() {
 function initCharts() {
     //Chart Bar
     $.each($('.chart.chart-bar'), function (i, key) {
-        var chartColor = $.AdminAlpino.options.colors[$(key).data('chartcolor')];
+        var chartColor = $.AdminSyncfox.options.colors[$(key).data('chartcolor')];
         $(key).sparkline(undefined, {
             type: 'bar',
             barColor: chartColor,
@@ -24,7 +24,7 @@ function initCharts() {
 
     //Chart Pie
     $.each($('.chart.chart-pie'), function (i, key) {
-        var chartColor = $.AdminAlpino.options.colors[$(key).data('chartcolor')];
+        var chartColor = $.AdminSyncfox.options.colors[$(key).data('chartcolor')];
         $(key).sparkline(undefined, {
             type: 'pie',
             height: '50px',
@@ -34,7 +34,7 @@ function initCharts() {
 
     //Chart Line
     $.each($('.chart.chart-line'), function (i, key) {
-        var chartColor = $.AdminAlpino.options.colors[$(key).data('chartcolor')];
+        var chartColor = $.AdminSyncfox.options.colors[$(key).data('chartcolor')];
         $(key).sparkline(undefined, {
             type: 'line',
             width: '60px',

@@ -1,7 +1,7 @@
 {
-  "name": "Alpino",
+  "name": "Syncfox",
   "version": "1.0.0",
-  "description": "Alpino Bootstrap 4 Admin",
+  "description": "Syncfox Bootstrap 4 Admin",
   "main": "Gruntfile.js",
   "directories": {
     "doc": "doc"

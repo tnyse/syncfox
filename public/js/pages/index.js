@@ -1,5 +1,5 @@
-﻿//Project:	Alpino - Responsive Bootstrap 4 Template
-//Primary use:	Alpino - Responsive Bootstrap 4 Template
+﻿//Project:	Syncfox - Responsive Bootstrap 4 Template
+//Primary use:	Syncfox - Responsive Bootstrap 4 Template
 $(function() {
     "use strict";	
 	MorrisArea();
